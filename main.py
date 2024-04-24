@@ -14,23 +14,10 @@ driver_path = 'C:\\Users\\kczyz\\PycharmProjects\\ImageDownloader\\chromedriver.
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 
+
 driver = webdriver.Chrome()
 
-driver.get("https://www.kayak.pl/explore/KRK-anywhere/20240424,20240501")
-
-
-base_city = '/html/body/div[2]/div[1]/main/div[2]/div[2]/div[2]/div/div[2]/div/div/div/div[4]/div[1]/div/div[{x}]/div/button/div/div[2]/div[1]/div[1]'
-base_price = '/html/body/div[2]/div[1]/main/div[2]/div[2]/div[2]/div/div[2]/div/div/div/div[4]/div/div/div[{x}]/div/button/div/div[2]/div[1]/div[2]'
-
-wait = WebDriverWait(driver,10)
-try:
-    reject_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="portal-container"]/div/div[2]/div/div/div[3]/div/div[1]/button[3]/div/div')))
-    reject_button.click()
-    print("Privacy message rejected")
-except Exception as e:
-    print(f"Error")
-
-wait = WebDriverWait(driver, 50)
+url = "https://www.otomoto.pl/osobowe"
 try:
     for i in range(1, 30):
         current_city = base_city.format(x=i)
