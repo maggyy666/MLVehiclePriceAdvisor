@@ -36,6 +36,40 @@ try:
             time.sleep(2)
 
 
+    print(f"Scraping page: {current_page}")
+    articles = driver.find_elements(By.CSS_SELECTOR, 'article[class*="ooa-yca59n e1i3khom0"]')
+    data_ids = []
+    for article in articles:
+        print(f"Car NO. {id}")
+        data_id = article.get_attribute('data-id')
+        data_ids.append(data_id)
+        link_element = article.find_element(By.XPATH, './/a[@target="_self"]')
+        car_name = link_element.text
+        # Mileage
+        dl_mileage_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+        mileage_element = dl_mileage_element.find_element(By.XPATH, './/dd[@data-parameter="mileage"]')
+        mileage = mileage_element.text
+        # Type_Of_Fuel
+        dl_fuel_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+        fuel_element = dl_fuel_element.find_element(By.XPATH, './/dd[@data-parameter="fuel_type"]')
+        fuel = fuel_element.text
+        # Gearbox
+        dl_gearbox_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+        gearbox_element = dl_gearbox_element.find_element(By.XPATH, './/dd[@data-parameter="gearbox"]')
+        gearbox = gearbox_element.text
+        # Year
+        dl_year_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+        year_element = dl_year_element.find_element(By.XPATH, './/dd[@data-parameter="year"]')
+        year = year_element.text
+        print("-" * 30)
+        print(f"ID: {data_id}")
+        print(f"Name: {car_name}")
+        print(f"Mileage: {mileage}")
+        print(f"Fuel_Type: {fuel}")
+        print(f"GearBox: {gearbox}")
+        print(f"Year: {year}")
+        print("-" * 30)
+        id += 1
 except Exception as e:
         print(f"Error for path {current_city}: {e}")
 
