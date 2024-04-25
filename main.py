@@ -73,4 +73,74 @@ try:
                         engine_power = 'null'
                         horse_power = 'null'
 
-driver.quit()
+                    try:
+                        # Mileage
+                        dl_mileage_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+                        mileage_element = dl_mileage_element.find_element(By.XPATH, './/dd[@data-parameter="mileage"]')
+                        mileage = mileage_element.text
+                    except:
+                        mileage = 'null'
+                    try:
+                        # Type_Of_Fuel
+                        dl_fuel_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+                        fuel_element = dl_fuel_element.find_element(By.XPATH, './/dd[@data-parameter="fuel_type"]')
+                        fuel = fuel_element.text
+                    except:
+                        fuel = 'null'
+                    try:
+                        # Gearbox
+                        dl_gearbox_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+                        gearbox_element = dl_gearbox_element.find_element(By.XPATH, './/dd[@data-parameter="gearbox"]')
+                        gearbox = gearbox_element.text
+                    except:
+                        gearbox = 'null'
+
+                    try:
+                        # Year
+                        dl_year_element = article.find_element(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+                        year_element = dl_year_element.find_element(By.XPATH, './/dd[@data-parameter="year"]')
+                        year = year_element.text
+                    except:
+                        year = 'null'
+
+                    try:
+                        # Price
+                        price_element = article.find_element(By.XPATH,
+                                                             './/h3[@class="e1i3khom16 ooa-1n2paoq er34gjf0"]')
+                        price = price_element.text
+                    except:
+                        price = 'null'
+
+                    try:
+                        # Currency
+                        currency_element = article.find_element(By.XPATH,
+                                                                './/p[@class="e1i3khom17 ooa-8vn6i7 er34gjf0"]')
+                        currency = currency_element.text
+                    except:
+                        currency = 'null'
+
+                    writer.writerow(
+                        [car_id, car_name, mileage, price, currency, engine_power, horse_power, current_page])
+
+                    print("-" * 30)
+                    print(f"ID: {data_id}")
+                    print(f"Name: {car_name}")
+                    print(f"Power:{engine_power} {horse_power} KM")
+                    print(f"Mileage: {mileage}")
+                    print(f"Fuel_Type: {fuel}")
+                    print(f"GearBox: {gearbox}")
+                    print(f"Year: {year}")
+                    print(f"Price: {price} {currency}")
+                    print("-" * 30)
+                    car_id += 1
+                    if car_id % 32 == 0:
+                        current_page += 1
+
+
+
+
+
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+  driver.quit()
