@@ -57,6 +57,20 @@ try:
              "GearBox", "Year", "Fuel_Type", "Horse_Power", "On_Page"])
 
         for car_brand in car_brands:
+            # Sprawdź, czy plik CSV dla danej marki już istnieje
+            if os.path.exists(os.path.join(csv_directory, f'{car_brand}.csv')):
+                print(f"Plik CSV dla marki {car_brand} już istnieje. Pomijanie...")
+                continue
+
+            # Utwórz nazwę pliku CSV dla danej marki
+            csv_brand_file = os.path.join(csv_directory, f'{car_brand}.csv')
+
+            # Otwórz plik CSV dla danej marki do zapisu danych specyficznych dla marki
+            with open(csv_brand_file, 'w', newline='', encoding='utf-8') as brand_file:
+                writer_brand = csv.writer(brand_file)
+                writer_brand.writerow(
+                    ["Car_ID", "ID", "Brand", "Model", "Mileage", "Price [PLN]", "Price [EUR]", "Engine_Power",
+                     "GearBox", "Year", "Fuel_Type", "Horse_Power", "On_Page"])
 
             car_id = 1
 
