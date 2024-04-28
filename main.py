@@ -56,7 +56,20 @@ try:
             ["Car_ID. ", "ID", "Brand", "Model", "Mileage", "Price [PLN]", "Price [EUR]", "Engine_Power",
              "GearBox", "Year", "Fuel_Type", "Horse_Power", "On_Page"])
 
+    # Otwórz plik data.csv do zapisu danych ogólnych
+    data_csv_exists = os.path.exists(csv_data_file)
+    with open(csv_data_file, 'a' if data_csv_exists else 'w', newline='', encoding='utf-8') as data_file:
+        writer_data = csv.writer(data_file)
+        if not data_csv_exists:
+            writer_data.writerow(
+                ["Car_ID", "ID", "Brand", "Model", "Mileage", "Price [PLN]", "Price [EUR]", "Engine_Power",
+                 "GearBox", "Year", "Fuel_Type", "Horse_Power", "On_Page"])
+
+        # Iteracja po każdej marce
         for car_brand in car_brands:
+            # Przechowuje dane tymczasowo w pamięci podręcznej
+            brand_data = []
+
             # Sprawdź, czy plik CSV dla danej marki już istnieje
             if os.path.exists(os.path.join(csv_directory, f'{car_brand}.csv')):
                 print(f"Plik CSV dla marki {car_brand} już istnieje. Pomijanie...")
