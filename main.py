@@ -25,6 +25,28 @@ status_file = 'status.txt'
 
 car_brands = ["bmw"]
 
+car_brands = ["Abarth","Acura","Aiways","Aixam","Alfa-Romeo",
+              "Alpine","Asia","Aston-Martin","Austin",
+              "Autobianchi","Baic","Bentley","BMW","Alpina",
+              "Brilliance","Bugatti","Buick","BYD","Cadillac",
+              "Casalini","Caterham","Cenntro","Changan","Chatenet",
+              "Chevrolet","Chrysler","Citroen","Cupra","Dacia","Daewoo",
+              "Daihatsu","DeLorean","DFM","DFSK","DKW","Dodge","Doosan",
+              "DR-MOTOR","DS-Automobiles","e-go","Elaris","FAW","Ferrari",
+              "Fiat","Fisker","Ford","Gaz","Geely","Genesis","GMC","GWM",
+              "HiPhi","Honda","Hongqi","Hummer","Hyundai","iamelectric",
+              "Ineos","Infinity","Inny","Isuzu","Iveco","JAC","Jaguar",
+              "Jeep","Jetour","Jinpeng","Kia","KTM","Lada","Lamborghini",
+              "Lancia","Land-Rover","Leapmotor","LEVC","Lexus","Ligier",
+              "Lincoln","Lixiang","Lotus","LTI","Lucid","lynk-and-co",
+              "MAN","Maserati","MAXIMUS","Maxus","Maybach","Mazda","McLaren",
+              "Mercedes-Benz","Mercury","MG","Microcar","MINI","Mitsubishi",
+              "Morgan","NIO","Nissan","Nysa","Oldsmobile","Opel","Peugeot",
+              "Piaggio","Plymouth","Polestar","Polonez","Pontiac","Porsche",
+              "RAM","Renault","Rolls-Royce","Rover","Saab","Seat","Seres","Shuanghuan",
+              "Skoda","Skywell","Smart","SsangYoung","Subaru","Suzuki","Syrena","Tarpan",
+              "Tata","Tesla","Toyota","Trabant","Triumph","Uaz","Vauxhall","VELEX","Volkswagen",
+              "Volvo","Voyah","Warszawa","Wartburg","Wolga","XPeng","Zaporozec","Zastava","ZEEKR","Zuk"]
 
 try:
 
