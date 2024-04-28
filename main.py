@@ -265,6 +265,33 @@ try:
                         car_id += 1
                     current_page += 1
                     time.sleep(2)
+                        car_count += 1
+
+            csv_brand_file = os.path.join(csv_directory, f'{car_brand}.csv')
+            with open(csv_brand_file, 'w', newline='', encoding='utf-8') as brand_file:
+                writer_brand = csv.writer(brand_file)
+                writer_brand.writerow(
+                    ["Car_ID", "ID", "Brand", "Model", "Mileage", "Price [PLN]", "Price [EUR]", "Engine_Power",
+                     "GearBox", "Year", "Fuel_Type", "Horse_Power", "On_Page"])
+                for data_row in brand_data:
+                    writer_brand.writerow(data_row)
+
+                print(f"Dane dla marki {car_brand} zostały zapisane do pliku {csv_brand_file}")
+
+            # Dodaj dane z plików marki do pliku data.csv
+        for file_name in os.listdir(csv_directory):
+            if file_name.endswith(".csv"):
+                csv_brand_file = os.path.join(csv_directory, file_name)
+                # Pomijanie pliku data.csv
+                if csv_brand_file != csv_data_file:
+                    with open(csv_brand_file, 'r', newline='', encoding='utf-8') as brand_csv:
+                        reader_brand = csv.reader(brand_csv)
+                        # Pominięcie pierwszego wiersza (nagłówków)
+                        next(reader_brand)
+                        # Dodanie danych z pliku marki do data.csv
+                        for row in reader_brand:
+                            writer_data.writerow(row)
+
 except Exception as e:
     print(f"Error: {e}")
 finally:
