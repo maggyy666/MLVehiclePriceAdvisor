@@ -9,6 +9,7 @@ from selenium .webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 driver_path = 'C:\\Users\\kczyz\\PycharmProjects\\ImageDownloader\\chromedriver.exe'
+driver_path = 'C:\\Users\\kczyz\\PycharmProjects\\KayakWebScraper\\chromedriver.exe'
 csv_directory = 'C:\\Users\\kczyz\\PycharmProjects\\KayakWebScraper\\CSV_FILES'
 
 chrome_options = Options()
