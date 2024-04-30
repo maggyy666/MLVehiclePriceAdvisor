@@ -20,27 +20,27 @@ limit_pages = 8000
 csv_data_file = 'data.csv'
 
 car_brands = ["Abarth","Acura","Aiways","Aixam","Alfa-Romeo",
-              "Alpine","Asia","Aston-Martin","Audi","Austin",
-              "Autobianchi","Baic","Bentley","BMW","Alpina",
+              "Alpine","Aston-Martin","Audi","Austin",
+             "Baic","Bentley","BMW","Alpina",
               "Brilliance","Bugatti","Buick","BYD","Cadillac",
-              "Casalini","Caterham","Cenntro","Changan","Chatenet",
+              "Casalini","Caterham","Chatenet",
               "Chevrolet","Chrysler","Citroen","Cupra","Dacia","Daewoo",
-              "Daihatsu","DeLorean","DFSK","DKW","Dodge","Doosan",
-              "DR-MOTOR","DS-Automobiles","e-go","Elaris","FAW","Ferrari",
-              "Fiat","Fisker","Ford","Gaz","Geely","Genesis","GMC","GWM",
-              "HiPhi","Honda","Hongqi","Hummer","Hyundai","iamelectric",
-              "Ineos","Infinity","Inny","Isuzu","Iveco","JAC","Jaguar",
-              "Jeep","Jetour","Jinpeng","Kia","KTM","Lada","Lamborghini",
-              "Lancia","Land-Rover","Leapmotor","LEVC","Lexus","Ligier",
-              "Lincoln","Lixiang","Lotus","LTI","Lucid","lynk-and-co",
-              "MAN","Maserati","MAXIMUS","Maxus","Maybach","Mazda","McLaren",
+              "Daihatsu","DeLorean","DFSK","DKW","Dodge",
+              "DS-Automobiles","e-go","Elaris","FAW","Ferrari",
+              "Fiat","Ford","Gaz","Geely","Genesis","GMC","GWM",
+              "Honda","Hongqi","Hummer","Hyundai","iamelectric",
+              "Ineos","Infinity","Inny","Isuzu","Iveco","Jaguar",
+              "Jeep","Jetour","Kia","KTM","Lada","Lamborghini",
+              "Lancia","Land-Rover","Lexus","Ligier",
+              "Lincoln","Lotus","Lucid","lynk-and-co",
+              "MAN","Maserati","Maxus","Maybach","Mazda","McLaren",
               "Mercedes-Benz","Mercury","MG","Microcar","MINI","Mitsubishi",
-              "Morgan","NIO","Nissan","Nysa","Oldsmobile","Opel","Peugeot",
-              "Piaggio","Plymouth","Polestar","Polonez","Pontiac","Porsche",
-              "RAM","Renault","Rolls-Royce","Rover","Saab","Seat","Seres","Shuanghuan",
+              "Morgan","Nissan","Nysa","Oldsmobile","Opel","Peugeot",
+              "Plymouth","Polestar","Polonez","Pontiac","Porsche",
+              "RAM","Renault","Rolls-Royce","Rover","Saab","Seat","Seres",
               "Skoda","Skywell","Smart","SsangYoung","Subaru","Suzuki","Syrena","Tarpan",
               "Tata","Tesla","Toyota","Trabant","Triumph","Uaz","Vauxhall","VELEX","Volkswagen",
-              "Volvo","Voyah","Warszawa","Wartburg","Wolga","XPeng","Zaporozec","Zastava","ZEEKR","Zuk"]
+              "Volvo","Warszawa","Wartburg","Wolga","Zastava","ZEEKR","Zuk"]
 
 car_id = 1
 
