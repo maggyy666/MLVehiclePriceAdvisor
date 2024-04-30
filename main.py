@@ -88,7 +88,7 @@ try:
                     if current_page > 1:
                         url = f"{base_url}{car_brand}?search%5Bfilter_enum_fuel_type%5D={fuel_type}&page={current_page}"
                         driver.get(url)
-                        WebDriverWait(driver, 10).until(
+                        WebDriverWait(driver, 30).until(
                             EC.visibility_of_element_located((By.XPATH, './/h3[@class="e1i3khom16 ooa-1n2paoq er34gjf0"]')))
                         time.sleep(2)
 
