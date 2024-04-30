@@ -215,7 +215,8 @@ try:
                         car_id += 1
                         car_count += 1
 
-                    if current_page % 50   == 0:  # Jeśli liczba strony jest wielokrotnością 10
+
+                    if current_page % 100 == 0 or current_page == (count // 32) + 1:
                         # Zapisz dane do pliku CSV dla danej marki
                         with open(brand_csv_file, 'a', newline='', encoding='utf-8') as brand_file:
                             writer_brand = csv.writer(brand_file)
