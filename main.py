@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-driver_path = 'C:\\Users\\kczyz\\PycharmProjects\\KayakWebScraper\\chromedriver.exe'
+driver_path = 'C:\\Users\\kczyz\\PycharmProjects\\ImageDownloader\\chromedriver.exe'
 csv_directory = 'C:\\Users\\kczyz\\PycharmProjects\\KayakWebScraper\\CSV_FILES'
 
 chrome_options = Options()
@@ -38,9 +38,9 @@ car_brands = ["Abarth","Acura","Aiways","Aixam","Alfa-Romeo",
               "Morgan","Nissan","Nysa","Oldsmobile","Opel","Peugeot",
               "Plymouth","Polestar","Polonez","Pontiac","Porsche",
               "RAM","Renault","Rolls-Royce","Rover","Saab","Seat","Seres",
-              "Skoda","Skywell","Smart","SsangYoung","Subaru","Suzuki","Syrena","Tarpan",
+              "Skoda","Skywell","Smart","SsangYong","Subaru","Suzuki","Syrena","Tarpan",
               "Tata","Tesla","Toyota","Trabant","Triumph","Uaz","Vauxhall","VELEX","Volkswagen",
-              "Volvo","Warszawa","Wartburg","Wolga","Zastava","ZEEKR","Zuk"]
+              "Volvo","Marka_Warszawa","Wartburg","Wolga","Zastawa","ZEEKR","Zuk"]
 
 car_id = 1
 
@@ -160,11 +160,9 @@ try:
                             year = 'null'
 
                         try:
-                            price_element = article.find_element(By.XPATH,
-                                                                 './/h3[@class="e1i3khom16 ooa-1n2paoq er34gjf0"]')
+                            price_element = article.find_element(By.XPATH,'.//h3[@class="e1i3khom16 ooa-1n2paoq er34gjf0"]')
                             price = price_element.text
-                            currency_element = article.find_element(By.XPATH,
-                                                                    './/p[@class="e1i3khom17 ooa-8vn6i7 er34gjf0"]')
+                            currency_element = article.find_element(By.XPATH, './/p[@class="e1i3khom17 ooa-8vn6i7 er34gjf0"]')
                             currency = currency_element.text
 
                             # Removing spaces/commas and converting to float
@@ -202,6 +200,8 @@ try:
                             [data_id, car_id, brand_name, car_model, mileage, price_pln_formatted, price_eur_formatted,
                              engine_power, gearbox, year, fuel, horse_power, current_page])
                         print("-" * 30)
+                        print(f"CAR NO. {car_id} / {count}")
+                        print(f"-"*30)
                         print(f"ID: {data_id}")
                         print(f"Brand: {brand_name}")
                         print(f"Model:{car_model}")
@@ -211,7 +211,6 @@ try:
                         print(f"GearBox: {gearbox}")
                         print(f"Year: {year}")
                         print(f"Price: {price_pln_formatted} PLN / {price_eur_formatted} EUR")
-                        print("-" * 30)
                         car_id += 1
                         car_count += 1
 
