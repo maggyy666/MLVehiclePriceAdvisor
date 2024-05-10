@@ -1,225 +1,104 @@
-import csv
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+from joblib import load
 import os
-import time
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
-driver_path = 'C:\\Users\\kczyz\\PycharmProjects\\ImageDownloader\\chromedriver.exe'
-csv_directory = 'C:\\Users\\kczyz\\PycharmProjects\\KayakWebScraper\\CSV_FILES'
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
+def preprocess_input(input_data, X):
+    # Sprawdzenie, czy podany model samochodu jest zawarty w nazwach modeli w zestawie danych
+    car_columns = [col for col in X.columns if 'model' in col.lower()]
+    if not car_columns:
+        raise ValueError("No car model column found in the dataset.")
+    car_models = set(X[car_columns[0]])
 
-driver = webdriver.Chrome()
-car_count = 1
-base_url = "https://www.otomoto.pl/osobowe/"
-limit_pages = 8000
+    for model in car_models:
+        if model in input_data['car_model']:
+            car_model = model
+            break
+    else:
+        raise ValueError("The provided car model '{}' does not exist in the dataset.".format(input_data['car_model']))
 
-car_brands = ["Abarth","Acura","Aiways","Aixam","Alfa-Romeo",
-              "Alpine","Aston-Martin","Audi","Austin",
-             "Baic","Bentley","BMW","Alpina",
-              "Brilliance","Bugatti","Buick","BYD","Cadillac",
-              "Casalini","Caterham","Chatenet",
-              "Chevrolet","Chrysler","Citroen","Cupra","Dacia","Daewoo",
-              "Daihatsu","DeLorean","DFSK","DKW","Dodge",
-              "DS-Automobiles","e-go","Ferrari",
-              "Fiat","Ford","Gaz","Geely","Genesis","GMC","GWM",
-              "Honda","Hongqi","Hummer","Hyundai","iamelectric",
-              "Ineos","Infiniti","Inny","Isuzu","Iveco","Jaguar",
-              "Jeep","Jetour","Kia","KTM","Lada","Lamborghini",
-              "Lancia","Land-Rover","Lexus","Ligier",
-              "Lincoln","Lotus","Lucid","lynk-and-co",
-              "MAN","Maserati","Maxus","Maybach","Mazda","McLaren",
-              "Mercedes-Benz","Mercury","MG","Microcar","MINI","Mitsubishi",
-              "Morgan","Nissan","Nysa","Oldsmobile","Opel","Peugeot",
-              "Plymouth","Polestar","Polonez","Pontiac","Porsche",
-              "RAM","Renault","Rolls-Royce","Rover","Saab","Seat","Seres",
-              "Skoda","Skywell","Smart","SsangYong","Subaru","Suzuki","Syrena","Tarpan",
-              "Tata","Tesla","Toyota","Trabant","Triumph","Uaz","Vauxhall","VELEX","Volkswagen",
-              "Volvo","Marka_Warszawa","Wartburg","Wolga","Zastawa","ZEEKR","Zuk"]
+    # Znalezienie indeksu kolumny odpowiadającej nazwie modelu
+    car_model_index = X.columns.get_loc(car_columns[0])
 
-car_id = 1
+    # Znalezienie indeksu kolumny odpowiadającej marce samochodu
+    brand_name_index = X.columns.get_loc('brand_name')
 
-try:
-    for car_brand in car_brands:
-        brand_csv_file = os.path.join(csv_directory, f'{car_brand}.csv')
+    # Pozostałe indeksy cech
+    mileage_index = X.columns.get_loc('mileage')
+    year_index = X.columns.get_loc('year')
+    gearbox_index = X.columns.get_loc('gearbox_' + input_data['gearbox'])
+    fuel_index = X.columns.get_loc('fuel_' + input_data['fuel'])
 
-        if os.path.exists(brand_csv_file):
-            print(f"Plik CSV dla marki {car_brand} już istnieje. Pomijanie...")
-            continue
+    processed_input_data = [
+        brand_name_index, car_model_index, input_data['mileage'], input_data['year'], gearbox_index, fuel_index
+    ]
 
-        fuel_types = [
-            "hybrid",
-            "electric",
-            "petrol",
-            "diesel",
-            "gas",
-            "ethanol",
-            "hydrogen",
-            "petrol-cng",
-            "petrol-lpg",
-            "plugin-hybrid"
-        ]
+    return processed_input_data
 
-        for fuel_type in fuel_types:
-            url = f"{base_url}{car_brand}?search%5Bfilter_enum_fuel_type%5D={fuel_type}"
-            driver.get(url)
 
-            try:
-                count_element = driver.find_element(By.XPATH, '//p[@class="e17gkxda2 ooa-17owgto er34gjf0"]/b')
-                count = int(count_element.text.replace(" ", ""))
-            except:
-                count = 0
 
-            print(f"Liczba ogłoszeń dla {fuel_type.capitalize()}: {count} dla {car_brand.capitalize()}")
 
-            for current_page in range(1, (count // 32) + 2):
-                print(f"Scraping page {current_page} for {car_brand.capitalize()} and fuel type {fuel_type.capitalize()}")
 
-                if current_page > 1:
-                    url = f"{base_url}{car_brand}?search%5Bfilter_enum_fuel_type%5D={fuel_type}&page={current_page}"
-                    driver.get(url)
-                    WebDriverWait(driver, 30).until(
-                        EC.visibility_of_element_located((By.XPATH, './/h3[@class="e1i3khom16 ooa-1n2paoq er34gjf0"]')))
-                    time.sleep(2)
 
-                articles = driver.find_elements(By.CSS_SELECTOR, 'article[class*="ooa-yca59n e1i3khom0"]')
 
-                for article in articles:
-                    data_id = article.get_attribute('data-id')
-                    #Creating an exception for brands that have dual-word names
-                    brand_mapping ={
-                        "Aston": "Aston Martin",
-                        "Alfa": "Alfa Romeo",
-                        "DS": "DS Automobiles",
-                        "Lynk": "Lynk & Co",
-                        "Land": "Land Rover"
-                    }
-                    try:
-                        link_element = article.find_element(By.XPATH,'.//a[@target="_self"]')
-                        car_name = link_element.text
-                        brand_prefix,car_model = car_name.split(" ",1)
-                        brand_name = brand_mapping.get(brand_prefix, brand_prefix)
-                        car_model = car_model.replace(brand_prefix, "").replace("Martin", "").replace("Romeo","").replace("Automobiles", "").replace(" & Co", "").replace("Rover", "").strip()
-                    except:
-                        car_name = 'null'
-                    try:
-                        power_element = article.find_element(By.XPATH,
-                                                             './/p[@class="e1i3khom10 ooa-1tku07r er34gjf0"]')
-                        power_text = power_element.text
-                        split = power_text.split("•")
-                        engine_power = split[0].strip()
-                        horse_power = split[1].strip().split("•")[0].strip()
-                    except:
-                        engine_power = 'null'
-                        horse_power = 'null'
 
-                    try:
-                        dl_mileage_element = article.find_element(By.XPATH,
-                                                                  './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        mileage_element = dl_mileage_element.find_element(By.XPATH,
-                                                                          './/dd[@data-parameter="mileage"]')
-                        mileage = mileage_element.text
-                    except:
-                        mileage = 'null'
+def predict_car_price(input_data, model, X):
+    # Przewidywanie ceny samochodu na podstawie danych wejściowych
+    input_data = preprocess_input(input_data, X)
+    predicted_price = model.predict([input_data])
+    return predicted_price[0]
 
-                    try:
-                        dl_fuel_element = article.find_element(By.XPATH,
-                                                               './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        fuel_element = dl_fuel_element.find_element(By.XPATH,
-                                                                     './/dd[@data-parameter="fuel_type"]')
-                        fuel = fuel_element.text
-                    except:
-                        fuel = 'null'
 
-                    try:
-                        dl_gearbox_element = article.find_element(By.XPATH,
-                                                                   './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        gearbox_element = dl_gearbox_element.find_element(By.XPATH,
-                                                                         './/dd[@data-parameter="gearbox"]')
-                        gearbox = gearbox_element.text
-                    except:
-                        gearbox = 'null'
+def get_user_input():
+    brand_name = input("Podaj markę samochodu: ")
 
-                    try:
-                        dl_year_element = article.find_element(By.XPATH,
-                                                               './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        year_element = dl_year_element.find_element(By.XPATH,
-                                                                     './/dd[@data-parameter="year"]')
-                        year = year_element.text
-                    except:
-                        year = 'null'
+    # Wczytanie danych w celu znalezienia wszystkich modeli dla podanej marki
+    data = pd.read_csv("cleaned_mileage_data.csv")
+    available_models = data[data['brand_name'] == brand_name]['car_model'].unique()
 
-                    try:
-                        price_element = article.find_element(By.XPATH,'.//h3[@class="e1i3khom16 ooa-1n2paoq er34gjf0"]')
-                        price = price_element.text
-                        currency_element = article.find_element(By.XPATH, './/p[@class="e1i3khom17 ooa-8vn6i7 er34gjf0"]')
-                        currency = currency_element.text
+    print("Available car models:")
+    for model in available_models:
+        print(model)
 
-                        # Removing spaces/commas and converting to float
-                        price = price.replace(' ', '').replace(',', '')
-                        price = float(price)
+    car_model = input("Podaj model samochodu: ")
+    mileage = float(input("Podaj przebieg samochodu (w km): "))
+    year = int(input("Podaj rok produkcji samochodu: "))
+    gearbox = input("Podaj typ skrzyni biegów (Manualna/Automatyczna): ")
+    fuel = input("Podaj rodzaj paliwa (Benzyna/Diesel): ")
 
-                        if currency == 'PLN':
-                            price_pln = price
-                            price_eur = round(price_pln * 0.23, 2)
-                        elif currency == 'EUR':
-                            price_eur = price
-                            price_pln = round(price_eur * 4.32, 2)
-                        else:
-                            price_pln = 'null'
-                            price_eur = 'null'
+    # Zwrócenie danych wejściowych w formie słownika
+    input_data = {
+        'brand_name': brand_name,
+        'car_model': car_model,
+        'mileage': mileage,
+        'year': year,
+        'gearbox': gearbox,
+        'fuel': fuel
+        # Dodaj pozostałe dane wejściowe
+    }
 
-                        # Formatting price
-                        def format_price_with_thousands_separator(price):
-                            parts = str(price).split('.')
-                            integer_part = '{:,.0f}'.format(int(parts[0]))
-                            if len(parts) > 1:
-                                return f"{integer_part}.{parts[1]}"
-                            else:
-                                return integer_part
+    return input_data
 
-                        price_pln_formatted = format_price_with_thousands_separator(price_pln)
-                        price_eur_formatted = format_price_with_thousands_separator(price_eur)
 
-                    except:
-                        price_pln = 'null'
-                        price_eur = 'null'
-                        currency = 'null'
+def main():
+    # Wczytanie wytrenowanego modelu
+    model = load('random_forest_model.pkl')
 
-                    with open(brand_csv_file, 'a', newline='', encoding='utf-8') as brand_file:
-                        writer_brand = csv.writer(brand_file)
-                        if current_page == 1:  # Zapisz nagłówki tylko raz na początku
-                            writer_brand.writerow(
-                                ["Car_ID", "ID", "Brand", "Model", "Mileage", "Price [PLN]", "Price [EUR]", "Engine_Power",
-                                 "GearBox", "Year", "Fuel_Type", "Horse_Power", "On_Page"])
-                        writer_brand.writerow(
-                            [data_id, car_id, brand_name, car_model, mileage, price_pln_formatted, price_eur_formatted,
-                             engine_power, gearbox, year, fuel, horse_power, current_page])
+    # Wczytanie przetworzonych danych
+    X = pd.read_csv('cleaned_mileage_data.csv')
 
-                    print("-" * 30)
-                    print(f"CAR NO. {car_id} / {count}")
-                    print(f"-"*30)
-                    print(f"ID: {data_id}")
-                    print(f"Brand: {brand_name}")
-                    print(f"Model:{car_model}")
-                    print(f"Power:{engine_power} {horse_power} KM")
-                    print(f"Mileage: {mileage}")
-                    print(f"Fuel_Type: {fuel}")
-                    print(f"GearBox: {gearbox}")
-                    print(f"Year: {year}")
-                    print(f"Price: {price_pln_formatted} PLN / {price_eur_formatted} EUR")
-                    car_id += 1
-                    car_count += 1
+    # Pobranie danych wejściowych od użytkownika
+    input_data = get_user_input()
 
-                if current_page % 100 == 0 or current_page == (count // 32) + 1:
-                    print(f"Dane dla marki {car_brand} zostały zapisane do pliku {brand_csv_file}")
+    # Przewidywanie ceny samochodu na podstawie danych wejściowych
+    predicted_price = predict_car_price(input_data, model, X)
 
-except Exception as e:
-    print(f"Error: {e}")
+    # Wyświetlenie przewidywanej ceny samochodu
+    print("Input data:", input_data)
+    print("Przewidywana cena samochodu:", predicted_price)
 
-finally:
-    driver.quit()
+
+if __name__ == "__main__":
+    main()
