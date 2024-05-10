@@ -1,47 +1,82 @@
-import os
-import csv
 import pandas as pd
-current_directory = os.getcwd()
-data_csv_file = os.path.join(current_directory, 'raw_data.csv')
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+from joblib import load
+import os
 
-csv_directory = os.path.join(current_directory, 'CSV_FILES')
 
-csv_files = [file for file in os.listdir(csv_directory) if file.endswith('.csv')]
+def preprocess_input(input_data, X):
+    # Przetwarzanie danych wejściowych użytkownika tak, aby pasowały do formatu oczekiwanego przez model
 
-try:
-    with open(data_csv_file, 'a', newline='', encoding='utf-8') as data_file:
-        writer_data = csv.writer(data_file)
+    # Sprawdzenie, czy podany model samochodu istnieje w zestawie danych
+    car_model_cols = [col for col in X.columns if 'car_model' in col and input_data['car_model'].lower() in col.lower()]
+    if not car_model_cols:
+        raise ValueError("The provided car model '{}' does not exist in the dataset.".format(input_data['car_model']))
 
-        for csv_file in csv_files:
-            csv_file_path = os.path.join(csv_directory, csv_file)
+    # Użycie pierwszego znalezionego dopasowania
+    car_model_index = X.columns.get_loc(car_model_cols[0])
 
-            if csv_file == 'raw_data.csv':
-                continue
+    # Pozostałe indeksy cech
+    brand_name_index = X.columns.get_loc('brand_name_' + input_data['brand_name'])
+    mileage_index = X.columns.get_loc('mileage')
+    year_index = X.columns.get_loc('year')
+    gearbox_index = X.columns.get_loc('gearbox_' + input_data['gearbox'])
+    fuel_index = X.columns.get_loc('fuel_' + input_data['fuel'])
 
-            with open(csv_file_path, 'r', newline='', encoding='utf-8') as current_file:
-                reader = csv.reader(current_file)
+    processed_input_data = [
+        brand_name_index, car_model_index, input_data['mileage'], input_data['year'], gearbox_index, fuel_index
+    ]
 
-                next(reader)
+    return processed_input_data
 
-                for row in reader:
-                    writer_data.writerow(row)
 
-    print("Raw data successfully saved to raw_data.csv")
+def predict_car_price(input_data, model, X):
+    # Przewidywanie ceny samochodu na podstawie danych wejściowych
+    input_data = preprocess_input(input_data, X)
+    predicted_price = model.predict([input_data])
+    return predicted_price[0]
 
-except Exception as e:
-    print(f"Error occured while saving data to raw_data.csv file: {e}")
 
-def clean_data(csv_file):
-    df = pd.read_csv(csv_file, header=None)
-    df.columns = ['data_id', 'car_id', 'brand_name', 'car_model', 'mileage',
-                  'price_pln_formatted', 'price_eur_formatted', 'engine_power',
-                  'gearbox', 'year', 'fuel', 'horse_power', 'current_page']
-    df = df.drop(['data_id','car_id','current_page'], axis=1)
-    df['mileage'] = df['mileage'].str.replace(' km', '')
-    df['horse_power'] = df['horse_power'].str.replace(' KM', '')
-    df['engine_power'] = df['engine_power'].str.replace(' cm3', '')
-    df = df.dropna()
-    df = df[df['horse_power'].str.match('^\d+$')]
-    df.to_csv('cleaned_data.csv', index = False)
-    print("Success")
-clean_data('raw_data.csv')
+def get_user_input():
+    brand_name = input("Podaj markę samochodu: ")
+    car_model = input("Podaj model samochodu: ")
+    mileage = float(input("Podaj przebieg samochodu (w km): "))
+    year = int(input("Podaj rok produkcji samochodu: "))
+    gearbox = input("Podaj typ skrzyni biegów (Manualna/Automatyczna): ")
+    fuel = input("Podaj rodzaj paliwa (Benzyna/Diesel): ")
+
+    # Tutaj możesz dodać kod do pobrania innych danych wejściowych od użytkownika, takich jak pojemność silnika, liczba koni mechanicznych itp.
+
+    # Zwrócenie danych wejściowych w formie słownika
+    input_data = {
+        'brand_name': brand_name,
+        'car_model': car_model,
+        'mileage': mileage,
+        'year': year,
+        'gearbox': gearbox,
+        'fuel': fuel
+        # Dodaj pozostałe dane wejściowe
+    }
+
+    return input_data
+
+
+def main():
+    # Wczytanie wytrenowanego modelu
+    model = load('random_forest_model.pkl')
+
+    # Wczytanie przetworzonych danych
+    X = pd.read_csv('cleaned_mileage_data.csv')
+
+    # Pobranie danych wejściowych od użytkownika
+    input_data = get_user_input()
+
+    # Przewidywanie ceny samochodu na podstawie danych wejściowych
+    predicted_price = predict_car_price(input_data, model, X)
+
+    # Wyświetlenie przewidywanej ceny samochodu
+    print("Przewidywana cena samochodu: ", predicted_price)
+
+
+if __name__ == "__main__":
+    main()
