@@ -1,8 +1,8 @@
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
 import joblib
-
-# Wczytaj zapisany model
-model = joblib.load('random_forest_model.pkl')
 
 # Wczytaj dane z pliku CSV
 data = pd.read_csv('cleaned_mileage_data.csv')
@@ -11,40 +11,32 @@ data['price_eur_formatted'] = data['price_eur_formatted'].str.replace(',', '').a
 # Kodowanie zmiennych kategorycznych za pomocą get_dummies
 data_encoded = pd.get_dummies(data, columns=['brand_name', 'car_model', 'gearbox', 'fuel'])
 
+# Podziel dane na cechy (X) i etykietę (y)
+X = data_encoded.drop(['price_eur_formatted'], axis=1)  # Usuń kolumnę z cenami, to będzie nasza etykieta
+y = data_encoded['price_eur_formatted']
 
-# Funkcja do przewidywania ceny na podstawie marki i modelu pojazdu
-def predict_price(brand_name, car_model):
-    if (data_encoded['brand_name_' + brand_name] == 1).any() & (data_encoded['car_model_' + car_model] == 1).any():
-        # Znajdź indeks rekordu dla podanej marki i modelu
-        idx = (data_encoded['brand_name_' + brand_name] == 1) & (data_encoded['car_model_' + car_model] == 1)
-        # Przewidź cenę dla danego indeksu
-        predicted_price = model.predict(data_encoded[idx].drop(['price_eur_formatted'], axis=1))
-        return predicted_price[0]
-    else:
-        return "Nie znaleziono informacji dla podanej marki i modelu."
+# Podziel dane na zestawy treningowy i testowy
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Podziel dane treningowe na partie
+batch_size = 10000
+num_batches = len(X_train) // batch_size + 1
+
+# Inicjalizuj model Random Forest Regressor
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+# Trenuj model na danych treningowych, przetwarzając dane w partiach
+for i in range(num_batches):
+    start_idx = i * batch_size
+    end_idx = min((i + 1) * batch_size, len(X_train))
+    X_batch = X_train.iloc[start_idx:end_idx]
+    y_batch = y_train.iloc[start_idx:end_idx]
+    model.fit(X_batch, y_batch)
 
 
-def display_models_by_brand(brand_name):
-    models = data.loc[data['brand_name'] == brand_name, 'car_model'].unique()
-    print("Modele marki", brand_name + ":")
-    for i, model in enumerate(models, 1):
-        if i % 5 == 0:
-            print(model)
-        else:
-            print(model, end=", ")
-    print()
-
-
-# Przykład użycia programu
-if __name__ == "__main__":
-    brand_name = input("Podaj markę pojazdu: ")
-
-    # Wyświetl wszystkie modele danej marki
-    display_models_by_brand(brand_name)
-
-    car_model = input("Podaj model pojazdu: ")
-    predicted_price = predict_price(brand_name, car_model)
-    if isinstance(predicted_price, str):
-        print(predicted_price)
-    else:
-        print(f"Optymalna cena dla {brand_name} {car_model}: {predicted_price} EUR")
+# Przewidywanie cen na danych testowych
+y_pred = model.predict(X_test)
+joblib.dump(model,'random_forest_model.pkl')
+# Ocena modelu
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
