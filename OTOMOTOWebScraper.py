@@ -48,7 +48,7 @@ try:
         brand_csv_file = os.path.join(csv_directory, f'{car_brand}.csv')
 
         if os.path.exists(brand_csv_file):
-            print(f"Plik CSV dla marki {car_brand} już istnieje. Pomijanie...")
+            print(f"CSV File for brand:  {car_brand} already exists. Skipping...")
             continue
 
         fuel_types = [
@@ -74,7 +74,7 @@ try:
             except:
                 count = 0
 
-            print(f"Liczba ogłoszeń dla {fuel_type.capitalize()}: {count} dla {car_brand.capitalize()}")
+            print(f"Number of listings {fuel_type.capitalize()}: {count} for {car_brand.capitalize()}")
 
             for current_page in range(1, (count // 32) + 2):
                 print(f"Scraping page {current_page} for {car_brand.capitalize()} and fuel type {fuel_type.capitalize()}")
@@ -117,41 +117,29 @@ try:
                         engine_power = 'null'
                         horse_power = 'null'
 
-                    try:
-                        dl_mileage_element = article.find_element(By.XPATH,
-                                                                  './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        mileage_element = dl_mileage_element.find_element(By.XPATH,
-                                                                          './/dd[@data-parameter="mileage"]')
-                        mileage = mileage_element.text
-                    except:
-                        mileage = 'null'
+                    parameters = {
+                        "mileage": "null",
+                        "fuel_type": "null",
+                        "gearbox": "null",
+                        "year": "null"
+                    }
 
                     try:
-                        dl_fuel_element = article.find_element(By.XPATH,
-                                                               './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        fuel_element = dl_fuel_element.find_element(By.XPATH,
-                                                                     './/dd[@data-parameter="fuel_type"]')
-                        fuel = fuel_element.text
+                        dl_elements = article.find_elements(By.XPATH, './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
+                        for dl_element in dl_elements:
+                            for param, default_value in parameters.items():
+                                try:
+                                    element = dl_element.find_element(By.XPATH, f'.//dd[@data-parameter="{param}"]')
+                                    parameters[param] = element.text
+                                except:
+                                    pass
                     except:
-                        fuel = 'null'
+                        pass
 
-                    try:
-                        dl_gearbox_element = article.find_element(By.XPATH,
-                                                                   './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        gearbox_element = dl_gearbox_element.find_element(By.XPATH,
-                                                                         './/dd[@data-parameter="gearbox"]')
-                        gearbox = gearbox_element.text
-                    except:
-                        gearbox = 'null'
-
-                    try:
-                        dl_year_element = article.find_element(By.XPATH,
-                                                               './/dl[@class="ooa-1uwk9ii e1i3khom11"]')
-                        year_element = dl_year_element.find_element(By.XPATH,
-                                                                     './/dd[@data-parameter="year"]')
-                        year = year_element.text
-                    except:
-                        year = 'null'
+                    mileage = parameters["mileage"]
+                    fuel = parameters["fuel_type"]
+                    gearbox = parameters["gearbox"]
+                    year = parameters["year"]
 
                     try:
                         price_element = article.find_element(By.XPATH,'.//h3[@class="e1i3khom16 ooa-1n2paoq er34gjf0"]')
@@ -192,7 +180,7 @@ try:
 
                     with open(brand_csv_file, 'a', newline='', encoding='utf-8') as brand_file:
                         writer_brand = csv.writer(brand_file)
-                        if current_page == 1:  # Zapisz nagłówki tylko raz na początku
+                        if current_page == 1:
                             writer_brand.writerow(
                                 ["Car_ID", "ID", "Brand", "Model", "Mileage", "Price [PLN]", "Price [EUR]", "Engine_Power",
                                  "GearBox", "Year", "Fuel_Type", "Horse_Power", "On_Page"])
@@ -216,7 +204,7 @@ try:
                     car_count += 1
 
                 if current_page % 100 == 0 or current_page == (count // 32) + 1:
-                    print(f"Dane dla marki {car_brand} zostały zapisane do pliku {brand_csv_file}")
+                    print(f"Data for a brand: {car_brand} has been successfully scraped into a CSV file: {brand_csv_file}")
 
 except Exception as e:
     print(f"Error: {e}")
