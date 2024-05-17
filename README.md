@@ -1,7 +1,7 @@
-# OtoMLPricePredictor
+# MLVehiclePriceAdvisor
 
 ## Introduction
-OtoMLPricePredictor is a Python-based web scraper designed to extract vehicle data from the popular automotive marketplace Otomoto. The extracted dataset is then preprocessed and prepared for machine learning (ML) analysis. The project utilizes a random forest ML model to predict optimal pricing for vehicles based on their features.
+MLVehiclePriceAdvisor is a Python-based web scraper designed to extract vehicle data from the popular automotive marketplace Otomoto. The extracted dataset is then preprocessed and prepared for machine learning (ML) analysis. The project utilizes a random forest ML model to predict optimal pricing for vehicles based on their features.
 
 ## Features
 - Web scraping of vehicle data from Otomoto.
@@ -10,7 +10,7 @@ OtoMLPricePredictor is a Python-based web scraper designed to extract vehicle da
 - Console application for user input of vehicle details and receiving optimal pricing recommendations.
 
 ## Installation
-To use OtoMLPricePredictor, follow these steps:
+To use MLVehiclePriceAdvisor, follow these steps:
 
 1. Clone the repository:
 git clone https://github.com/maggyy666/MLVehiclePriceAdvisor
