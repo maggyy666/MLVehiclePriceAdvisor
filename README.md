@@ -19,7 +19,7 @@ $$
 \hat{y} = \frac{1}{T} \sum_{t=1}^{T} \hat{y}_t(\mathbf{x})
 $$
 
-Here, $\( \hat{y}_t(\mathbf{x}) \)$ represents the prediction made by the $\( t \)$-th decision tree in the random forest, and $\( T \) $ is the total number of trees.
+Here, $\( \hat{y}_t(\mathbf{x}) \)$ represents the prediction made by the $\( t \)$-th decision tree in the random forest, and $\( T \)$ is the total number of trees.
 
 ## Features
 - Web scraping of vehicle data from Otomoto.
