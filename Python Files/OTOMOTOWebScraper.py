@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-driver_path = 'C:\\Users\\kczyz\\PycharmProjects\\ImageDownloader\\chromedriver.exe'
+driver_path = '' #put your chrome driver directory here
 csv_directory = os.path.join(project_dir, 'CSV_FILES')
 
 chrome_options = Options()
@@ -202,7 +202,7 @@ try:
                     print(f"ID: {data_id}")
                     print(f"Brand: {brand_name}")
                     print(f"Model:{car_model}")
-                    print(f"Power:{engine_power} {horse_power} KM")
+                    print(f"Power:{engine_power} {horse_power}")
                     print(f"Mileage: {mileage}")
                     print(f"Fuel_Type: {fuel}")
                     print(f"GearBox: {gearbox}")
