@@ -190,6 +190,57 @@ The `RandomForest_Training.py` script is designed to train a Random Forest machi
 
 ### Key Feature
 - **R² Score of 0.77:** The model achieves an R² score of approximately 0.77 on the dataset, indicating that 77% of the variance in the vehicle prices can be explained by the features used in the model. This reflects a relatively high level of predictive accuracy.
+
+Here's the detailed breakdown for the `price_predictor.py` script, formatted for the README:
+
+---
+
+# Price Prediction Script Overview
+The `price_predictor.py` script is designed to predict the optimal price of a vehicle based on its brand, model, mileage, and production year. This is achieved using a pre-trained Random Forest model. The script performs several steps to load the data, preprocess it, make predictions, and display the results to the user. Below is a detailed breakdown of the script's functionality:
+
+1. **Importing Libraries:**
+   - The script starts by importing necessary libraries such as `pandas`, `joblib`, and `os`.
+   - `pandas` is used for data manipulation, `joblib` for loading the pre-trained model, and `os` for handling file paths.
+
+2. **Defining Variables:**
+   - `project_dir`: Sets the project directory path.
+   - `model_path`: Specifies the path to the pre-trained Random Forest model (`random_forest_model.pkl`).
+   - `data_path`: Specifies the path to the preprocessed dataset file (`output.csv`).
+
+3. **Loading and Preprocessing Data:**
+   - The dataset is loaded from the specified CSV file into a DataFrame.
+   - The `price_eur_formatted` column is converted to a float data type after removing commas.
+   - Categorical features (`brand_name`, `car_model`, `gearbox`, `fuel`) are one-hot encoded using `pd.get_dummies()`, converting them into numerical format suitable for machine learning models.
+
+4. **Price Prediction Function:**
+   - **predict_price(brand_name, car_model, mileage, production_year):**
+     - This function predicts the price of a vehicle based on its brand, model, mileage, and production year.
+     - It checks if the provided brand and model exist in the encoded dataset.
+     - It calculates the average mileage and production year for the specified brand and model.
+     - It adjusts the predicted price based on the deviation of the provided mileage and production year from the average values, ensuring the price doesn't go below zero.
+
+5. **Display Models by Brand Function:**
+   - **display_models_by_brand(brand_name):**
+     - This function displays all available models for a specified brand.
+     - It helps users to see the available models for the brand they are interested in.
+
+6. **Main Program Execution:**
+   - The script prompts the user to enter the brand, model, mileage, and production year of the vehicle.
+   - It calls `display_models_by_brand` to show available models for the entered brand.
+   - It then calls `predict_price` to calculate and display the optimal price in both EUR and PLN.
+
+### Key Features:
+- **User Input for Predictions:** The script allows users to input vehicle details and provides real-time optimal price predictions.
+- **Adjustments Based on Mileage and Year:** The price is dynamically adjusted based on mileage and production year, enhancing prediction accuracy.
+
+### Example Usage:
+```bash
+python price_predictor.py
+```
+The user will be prompted to enter the car brand, model, mileage, and production year. The script will then display the optimal price in both EUR and PLN.
+
+By utilizing this script, users can obtain accurate pricing recommendations for vehicles, aiding in buying or selling decisions.
+
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
