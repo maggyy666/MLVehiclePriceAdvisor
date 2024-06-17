@@ -28,23 +28,22 @@ def predict_price(brand_name, car_model, mileage, production_year):
             predicted_price = model.predict(data_encoded[idx].drop(['price_eur_formatted'], axis=1))
             predicted_price = predicted_price[0]
 
-            # Adjust the price based on mileage
+
             while mileage > avg_mileage:
-                predicted_price *= 0.995  # Decrease by 0.5%
+                predicted_price *= 0.995
                 mileage -= 10000
             while mileage < avg_mileage:
-                predicted_price *= 1.005  # Increase by 0.5%
+                predicted_price *= 1.005
                 mileage += 10000
 
-            # Adjust the price based on production year
             while production_year < avg_year:
-                predicted_price *= 0.95  # Decrease by 5%
+                predicted_price *= 0.95
                 production_year += 1
             while production_year > avg_year:
-                predicted_price *= 1.05  # Increase by 5%
+                predicted_price *= 1.05
                 production_year -= 1
 
-            return max(predicted_price, 0)  # Ensure the price doesn't go below zero
+            return max(predicted_price, 0)
         else:
             return "No information found for the specified make and model."
     else:
