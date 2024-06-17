@@ -53,17 +53,17 @@ def convert_to_float(input_output_file):
     # rmv empty
     df.dropna(subset=['mileage', 'price_pln_formatted', 'price_eur_formatted', 'engine_power'], inplace=True)
 
-    # Usunięcie spacji w kolumnie "engine_power" i konwersja do float
+
     df['engine_power'] = df['engine_power'].str.replace(' ','').astype(float)
 
     # rmv km, conv => float
     df['mileage'] = df['mileage'].str.replace(' km','').str.replace(' ','').astype(float)
 
-    # Convert to float
+
     df['price_pln_formatted'] = df['price_pln_formatted'].astype(float)
     df['price_eur_formatted'] = df['price_eur_formatted'].astype(float)
 
-    # Remove horsepower
+
     df['horse_power'] = df['horse_power'].str.replace(' KM','')
 
     df.to_csv(input_output_file, index=False)
