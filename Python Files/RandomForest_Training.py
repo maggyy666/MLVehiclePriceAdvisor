@@ -16,7 +16,7 @@ data['price_eur_formatted'] = data['price_eur_formatted'].str.replace(',', '').a
 
 data_encoded = pd.get_dummies(data, columns=['brand_name', 'car_model', 'gearbox', 'fuel'])
 
-X = data_encoded.drop(['price_eur_formatted'], axis=1)  # Usuń kolumnę z cenami, to będzie nasza etykieta
+X = data_encoded.drop(['price_eur_formatted'], axis=1)
 y = data_encoded['price_eur_formatted']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
