@@ -91,7 +91,6 @@ try:
 
                 for article in articles:
                     data_id = article.get_attribute('data-id')
-                    # Creating an exception for brands that have dual-word names
                     brand_mapping = {
                         "Aston": "Aston Martin",
                         "Alfa": "Alfa Romeo",
@@ -151,7 +150,6 @@ try:
                                                                  './/p[@class="e1i3khom17 ooa-8vn6i7 er34gjf0"]')
                         currency = currency_element.text
 
-                        # Removing spaces/commas and converting to float
                         price = price.replace(' ', '').replace(',', '')
                         price = float(price)
 
@@ -165,7 +163,7 @@ try:
                             price_pln = 'null'
                             price_eur = 'null'
 
-                        # Formatting price
+
                         def format_price_with_thousands_separator(price):
                             parts = str(price).split('.')
                             integer_part = '{:,.0f}'.format(int(parts[0]))
@@ -185,7 +183,7 @@ try:
                     with open(brand_csv_file, 'a', newline='', encoding='utf-8') as brand_file:
                         writer_brand = csv.writer(brand_file)
 
-                        # Sprawdź, czy plik jest pusty
+
                         if brand_file.tell() == 0:
                             writer_brand.writerow(
                                 ["data_id", "car_id", "brand_name", "car_model", "mileage", "price_pln_formatted",
