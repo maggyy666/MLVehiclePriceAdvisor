@@ -1,0 +1,97 @@
+# Ignorowanie katalogu .idea generowanego przez PyCharm
+.idea/
+
+# Ignorowanie cache'a i tymczasowych plików Pythona
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.tmp
+*.log
+
+# Ignorowanie katalogów wirtualnych środowisk
+env/
+venv/
+ENV/
+.venv/
+
+# Ignorowanie plików baz danych SQLite
+*.sqlite
+*.sqlite3
+
+# Ignorowanie plików i katalogów specyficznych dla systemu operacyjnego
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+# Linux
+*~
+
+# Ignorowanie plików wygenerowanych przez Jupyter Notebooks
+.ipynb_checkpoints
+
+# Ignorowanie plików pakietów
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.lock
+
+# Ignorowanie plików instalacyjnych
+*.whl
+
+# Ignorowanie plików, które mogłyby zawierać dane dostępowe
+*.env
+
+# Ignorowanie plików tymczasowych specyficznych dla projektu
+logs/
+*.log
+
+# Ignorowanie plików specyficznych dla edytora tekstu
+# Visual Studio Code
+.vscode/
+# Emacs
+*~
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Ignorowanie tymczasowych plików generowanych podczas pracy
+*.bak
+*.swp
+*.swo
+
+# Pliki wygenerowane przez pip
+pip-log.txt
+
+# Ignorowanie tymczasowych plików HTMLcov
+htmlcov/
+
+# Ignorowanie plików konfiguracyjnych dla narzędzi CI/CD
+# Travis CI
+.travis.yml
+# GitHub Actions
+.github/
+
+# Ignorowanie plików tymczasowych Tworzone przez testowanie
+.coverage
+.tox/
+
+# Ignorowanie plików tymczasowych wygenerowanych przez edytory i systemy operacyjne
+*.temp
+
+# Specyficzne dla PyCharm pliki, które mogą zawierać dane tymczasowe
+*.iml
+
+# Ignorowanie danych eksperymentów machine learning
+# Uwaga: .csv i .pkl są tutaj dozwolone
+*.h5
+*.hd5
+
+# Ignorowanie plików checkpoint
+*.checkpoint
+
+# Ignorowanie innych tymczasowych plików i folderów
+temp/
+tmp/
